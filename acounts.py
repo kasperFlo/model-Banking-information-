@@ -1,7 +1,4 @@
-
-class regularAcount:  
-    instances = []
-
+class regularAcount: 
     def __init__(self,acNum:int,acHolN:str,rateOInt:float,curBal:float):
         self._acountNumber = acNum
         self._acountHolderName = acHolN
@@ -33,36 +30,45 @@ class regularAcount:
         @_currentBalance.setter
         def _currentBalance(self,args):
             self.__currentBalance = args
-    def deposit(self):
-        pass
-    def withdraw(self):
-        pass
+    def deposit(self,depositAmount):
+        if (depositAmount > 0):
+            self._currentBalance += depositAmount
+        else:
+            raise TypeError("Transaction Declined : Invalid Amount")
+        
+    def withdraw(self,withdrawAmount):
+        if (withdrawAmount <= self._currentBalance): #check if there is enough money
+            self._currentBalance -= withdrawAmount
+            return withdrawAmount
+        else:  
+            raise TypeError("Transaction Declined : Insufficient Funds")
+
     def __str__(self) -> str:
         return f"{self._acountNumber} {self._acountHolderName} {self._rateOfInterest} {self._currentBalance}"
 
 
 class savingAccount(regularAcount): 
     def __init__(self,acNum:int,acHolN:str,rateOInt:float,curBal:float,minBal:float):
-        super.__init__(acNum,acHolN,rateOInt,curBal)
+        super().__init__(acNum,acHolN,rateOInt,curBal)
         self._minimumBalance = minBal
-    def caWithdraw(self,withdrawAmount):
+    def withdraw(self,withdrawAmount):
         #can only withdraw if left with more then minimumBalance amount
-        if (self._currentBalance - withdrawAmount) < self._minimumBalance: 
+        if (self._currentBalance - withdrawAmount) > self._minimumBalance: 
             self._currentBalance -= withdrawAmount
             return withdrawAmount
         else:  
-            return None
+            raise TypeError("Transaction Declined : Over Limit / Min Value")
 
 class checkingAcount(regularAcount): 
     def __init__(self,acNum:int,acHolN:str,rateOInt:float,curBal:float,ovrDraftLim :float):
-        super.__init__(acNum,acHolN,rateOInt,curBal)
+        super().__init__(acNum,acHolN,rateOInt,curBal)
         self._overdraftAllowed = ovrDraftLim
-    def saWithdraw(self,withdrawAmount):
+    def withdraw(self,withdrawAmount):
         #can only withdraw if left with more then minimumBalance minus overdraft amount
-        if (self._currentBalance - withdrawAmount) < self._minimumBalance - self._overdraftAllowed: 
+        if (self._currentBalance - withdrawAmount) >= (0 - self._overdraftAllowed): 
             self._currentBalance -= withdrawAmount
             return withdrawAmount
         else:  
-            return None
+            raise TypeError("Transaction Declined : Insufficient Overdraft / Funds")
     
 
