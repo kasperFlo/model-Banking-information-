@@ -1,57 +1,79 @@
-import acounts as A , os ,time
+import acounts as A , os ,time ,json 
+from pprint import pprint
 clear = lambda: os.system('clear')
 centeramount = 50
 
 #setting defaults
-allAcounts = {}
 wallet = 10000
+localBankDB = []
+
 
 defaultAc = A.regularAcount(0000,"default",2.2,5000)
-allAcounts.update({defaultAc._acountNumber : defaultAc})
+checkingAc = A.checkingAcount("0001","defaultChck",2.2,5001,200)
+savingAc = A.savingAccount("0002","defaultSave",2.2,5002,2000)
 
-checkingAc = A.checkingAcount(1,"defaultChck",2.2,5001,200)
-allAcounts.update({checkingAc._acountNumber : checkingAc})
-
-savingAc = A.savingAccount(2,"defaultSave",2.2,5002,2000)
-allAcounts.update({savingAc._acountNumber : savingAc})
-
-def showMainMenu():
+def showMainMenu():  
+    import acounts as A 
     while True: 
-        clear()
-        print("--Main Menu--".center(centeramount))
-        print("""   [1] : Open Account
+        # clear()
+        print("""       --Main Menu--
+    [1] : Open Account
     [2] : Select Account
     [3] : Exit Application
         """)
-        #testing
-        # print(defaultAc._acountNumber)
-        # print(allAcounts)
-        
         try: 
             userinp = int(input("> "))
-        #TODO open acount
+        #DONE open acount
             if userinp == 1:
-                pass
-            #DONE select account
+                try:
+                    # print("""       --Account Opening--""")
+                    # accountType = input("what type of acount would you like to open (\n   [regular]\n   [checking]\n   [saving)\n   >")
+                    # acountHolderName = input("What Name Would you like this account to be under\n   >")
+                    # rateOfInterest = input("What is this accounts rate of interest\n    >")
+                    # currentBalance = input("How much would you like to initially deposit into this account\n    >")
+                    # acountNumber = input("what is this accounts number\n    >")
+                    
+                    accountType = "regular"
+                    acountHolderName = "dickhead"
+                    rateOfInterest = "dickhead" #69
+                    currentBalance = 21
+                    acountNumber = 6868
+                    
+                    if(accountType.lower() == "regular"):
+                        acountHolderName = A.regularAcount(acountNumber,acountHolderName,rateOfInterest,currentBalance)
+                    elif(accountType.lower() =="checking"):
+                        overdraftAllowed = input("What is the over draft of this account\n    >")
+                        acountHolderName = A.checkingAcount(acountNumber,acountHolderName,rateOfInterest,currentBalance,overdraftAllowed)
+                    elif(accountType.lower =="saving"):
+                        minimumBalance = input("What is this accounts Minimum Balance\n   ")
+                        acountHolderName = A.savingAccount(acountNumber,acountHolderName,rateOfInterest,currentBalance,overdraftAllowed,minimumBalance)
+                    updateDatabase(acountHolderName)
+                except Exception as e: print(e, end="")
+
+        #DONE select account
             elif userinp == 2:
-                print("All Acounts".center(centeramount))
-                for acount in allAcounts.values():
-                    print(f" : {acount._acountHolderName}")
+                allAcNum = [i['acountNumber'] for i in Gdata]
+                print("  All Acounts")
+
+                pprint(Gdata)
+                # pprint(localBankDB)
+
                 while True:
                     inpnum = int(input("Enter Account Number "))
-                    if inpnum in allAcounts.keys():
-                        showAccountMenu(allAcounts[inpnum])
+                    if inpnum in allAcNum:
+                        showAccountMenu(allAcNum.index(inpnum))
                     else:
                         print("account doesnt exsist")
-            #TODO exit Application  
+        #DONE Application  
             elif userinp == 3:
                 print("EXITING Banking System")
                 exit
-                break
-        except: print("invalid input")
+        except: print("invalid input") 
+        time.sleep(2)
         
-def showAccountMenu(selectedAcc):
+def showAccountMenu(inputAcc):
     global wallet
+    selectedAcc = localBankDB[inputAcc]
     while True:
         try:
             clear()
@@ -82,15 +104,39 @@ def showAccountMenu(selectedAcc):
             elif(userinp == 4):
                 print("Exiting Acount")
                 break
-            #TODO check balance
-            #TODO deposit
-            #TODO withdraw
-            #TODO exit account
             time.sleep(2)
         except:
             print("invalid input")
             time.sleep(2)
     showMainMenu()
+
+
+#database functions VVV
+with open ('accountDataBase.json', 'w') as A:
+    json.dump([],A)
+#resets database ^^^
+
+def updateLocalData():
+    with open ('accountDataBase.json', 'r') as A:
+        global Gdata
+        Gdata = (json.load(A))
+def updateDatabase(*args:list):
+    updateLocalData()
+    try:
+        allAcNum = [i['acountNumber'] for i in Gdata]
+        for i in args:
+            if i in localBankDB or i._acountNumber in allAcNum:
+                raise TypeError ("One or More Inputed Accounts already exist")
+            with open ('accountDataBase.json', 'w') as A:
+                newData = Gdata
+                newData.append(i.getInfo())
+                json.dump(newData,A ,indent=4)
+        for obj in args:
+            localBankDB.append(obj)
+        # updateLocalData()
+    except Exception as e: print(e) ; time.sleep(2)
+updateDatabase(defaultAc,checkingAc,savingAc)
+
 
 #init call    
 showMainMenu()
