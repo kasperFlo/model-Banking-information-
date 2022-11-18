@@ -8,14 +8,14 @@ wallet = 10000
 localBankDB = []
 
 
-defaultAc = A.regularAcount(0000,"default",2.2,5000)
+defaultAc = A.regularAcount("0000","default",2.2,5000)
 checkingAc = A.checkingAcount("0001","defaultChck",2.2,5001,200)
 savingAc = A.savingAccount("0002","defaultSave",2.2,5002,2000)
 
 def showMainMenu():  
     import acounts as A 
     while True: 
-        # clear()
+        clear()
         print("""       --Main Menu--
     [1] : Open Account
     [2] : Select Account
@@ -26,18 +26,18 @@ def showMainMenu():
         #DONE open acount
             if userinp == 1:
                 try:
-                    # print("""       --Account Opening--""")
-                    # accountType = input("what type of acount would you like to open (\n   [regular]\n   [checking]\n   [saving)\n   >")
-                    # acountHolderName = input("What Name Would you like this account to be under\n   >")
-                    # rateOfInterest = input("What is this accounts rate of interest\n    >")
-                    # currentBalance = input("How much would you like to initially deposit into this account\n    >")
-                    # acountNumber = input("what is this accounts number\n    >")
+                    print("""       --Account Opening--""")
+                    accountType = input("what type of acount would you like to open (\n   [regular]\n   [checking]\n   [saving)\n   >")
+                    acountHolderName = input("What Name Would you like this account to be under\n   >")
+                    rateOfInterest = input("What is this accounts rate of interest\n    >")
+                    currentBalance = input("How much would you like to initially deposit into this account\n    >")
+                    acountNumber = input("what is this accounts number\n    >")
                     
-                    accountType = "regular"
-                    acountHolderName = "dickhead"
-                    rateOfInterest = "dickhead" #69
-                    currentBalance = 21
-                    acountNumber = 6868
+                    # accountType = "regular"
+                    # acountHolderName = ""
+                    # rateOfInterest = 69.9999
+                    # currentBalance = -2000
+                    # acountNumber = 6868
                     
                     if(accountType.lower() == "regular"):
                         acountHolderName = A.regularAcount(acountNumber,acountHolderName,rateOfInterest,currentBalance)
@@ -48,7 +48,7 @@ def showMainMenu():
                         minimumBalance = input("What is this accounts Minimum Balance\n   ")
                         acountHolderName = A.savingAccount(acountNumber,acountHolderName,rateOfInterest,currentBalance,overdraftAllowed,minimumBalance)
                     updateDatabase(acountHolderName)
-                except Exception as e: print(e, end="")
+                except Exception as e: print(e)
 
         #DONE select account
             elif userinp == 2:
@@ -59,7 +59,7 @@ def showMainMenu():
                 # pprint(localBankDB)
 
                 while True:
-                    inpnum = int(input("Enter Account Number "))
+                    inpnum = str(input("Enter Account Number "))
                     if inpnum in allAcNum:
                         showAccountMenu(allAcNum.index(inpnum))
                     else:

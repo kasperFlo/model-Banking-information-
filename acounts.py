@@ -1,48 +1,57 @@
 class regularAcount: 
-    def __init__(self,acNum:int,acHolN:str,rateOInt:float,curBal:float):
+    def __init__(self,acNum:str,acHolN:str,rateOInt:float,curBal:float):
         self._acountNumber = acNum
         self._acountHolderName = acHolN
         self._rateOfInterest = rateOInt
         self._currentBalance = curBal
 #getters
-        @property
-        def _acountNumber(self):
-            return self.__acountNumber
-        @property
-        def _acountHolderName(self):
-            return self.__acountHolderName
-        @property
-        def _rateOfInterest(self):
-            return self.__rateOfInterest
-        @property
-        def _currentBalance(self):
-            return self.__currentBalance
+    @property
+    def _acountNumber(self):
+        return self.__acountNumber
+    @property
+    def _acountHolderName(self):
+        return self.__acountHolderName
+    @property
+    def _rateOfInterest(self):
+        return self.__rateOfInterest
+    @property
+    def _currentBalance(self):
+        return self.__currentBalance
 #setteres
-        @_acountNumber.setter
-        def _acountNumber(self,args):
-            print("setting _acountNumber")
-            if (str(args).isnumeric() and isinstance(args,int)):
-                self.__acountNumber = args
-            else:   raise TypeError ("Error : Invaild Account Number")
-        @_acountHolderName.setter
-        def _acountHolderName(self,args):
-            if (args.isalpha()):
-                self.__acountHolderName = args
-            else:   raise TypeError ("Error : Invaild Input")
-        @_rateOfInterest.setter
-        def _rateOfInterest(self,args):
-            if isinstance(args,float):
-                self.__rateOfInterest = args
-            else:   raise TypeError ("Error : Invaild Interest Rate Number")
-        @_currentBalance.setter
-        def _currentBalance(self,args):
-            if isinstance(args,float):
-                self.__currentBalance = args
-            else:raise TypeError ("Error : Invaild Balance Ammount / Number")
+    @_acountNumber.setter
+    def _acountNumber(self,accNUm):
+        try: 
+            if (str(accNUm).isnumeric() and isinstance(int(accNUm),int)):
+                self.__acountNumber = accNUm
+            else: raise
+        except:   raise TypeError ("Error : Invaild Account Number")
+    @_acountHolderName.setter
+    def _acountHolderName(self,accName):
+        try:
+            if (accName.isalpha()):
+                self.__acountHolderName = accName
+            else: raise
+        except:   raise TypeError ("Error : Invaild Input")
+    @_rateOfInterest.setter
+    def _rateOfInterest(self,RoI):
+        try:
+            if isinstance(RoI,(int,float)):
+                self.__rateOfInterest = RoI
+            else: raise  
+        except:raise TypeError ("Error : Invaild Interest Rate Number")
+    @_currentBalance.setter
+    def _currentBalance(self,accBal):
+        try:
+            if isinstance(accBal,(int,float)) and accBal > 0:
+                self.__currentBalance = accBal
+            else: raise
+        except:raise TypeError ("Error : Invaild Balance Ammount / Number")
     def deposit(self,depositAmount):
-        if (depositAmount > 0):
-            self._currentBalance += depositAmount
-        else:   raise TypeError("Transaction Declined : Invalid Amount")
+        try:
+            if (depositAmount > 0):
+                self._currentBalance += depositAmount
+            else: raise
+        except:raise TypeError("Transaction Declined : Invalid Amount")
         
     def withdraw(self,withdrawAmount):
         if (withdrawAmount <= self._currentBalance): #check if there is enough money
@@ -58,7 +67,7 @@ class regularAcount:
         "currentBalance" : self._currentBalance 
         }   
         return output
-
+#savings account
 class savingAccount(regularAcount): 
     def __init__(self,acNum:int,acHolN:str,rateOInt:float,curBal:float,minBal:float):
         super().__init__(acNum,acHolN,rateOInt,curBal)
@@ -78,7 +87,7 @@ class savingAccount(regularAcount):
         "currentBalance" : self._currentBalance,
         "minimumBalance" :self._minimumBalance}
         return output
-    
+#checking Acount
 class checkingAcount(regularAcount): 
     def __init__(self,acNum:int,acHolN:str,rateOInt:float,curBal:float,ovrDraftLim :float):
         super().__init__(acNum,acHolN,rateOInt,curBal)
