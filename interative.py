@@ -1,4 +1,4 @@
-import acounts as A , os ,time ,json 
+import acounts as A , os ,time ,json ,sys
 from pprint import pprint
 clear = lambda: os.system('clear')
 centeramount = 50
@@ -7,10 +7,11 @@ centeramount = 50
 wallet = 10000
 localBankDB = []
 
-
-defaultAc = A.regularAcount("0000","default",2.2,5000)
-checkingAc = A.checkingAcount("0001","defaultChck",2.2,5001,200)
-savingAc = A.savingAccount("0002","defaultSave",2.2,5002,2000)
+defaultAc = A.regularAcount("1001","default",2.2,5000)
+defaultAc2 = A.regularAcount("2002","default",2.2,5000)
+checkingAc = A.checkingAcount("3003","defaultChck",2.2,5001,200)
+checkingAc2 = A.checkingAcount("4004","defaultChck",2.2,5001,200)
+savingAc = A.savingAccount("5005","defaultSave",2.2,5002,2000)
 
 def showMainMenu():  
     import acounts as A 
@@ -33,12 +34,6 @@ def showMainMenu():
                     currentBalance = input("How much would you like to initially deposit into this account\n    >")
                     acountNumber = input("what is this accounts number\n    >")
                     
-                    # accountType = "regular"
-                    # acountHolderName = ""
-                    # rateOfInterest = 69.9999
-                    # currentBalance = -2000
-                    # acountNumber = 6868
-                    
                     if(accountType.lower() == "regular"):
                         acountHolderName = A.regularAcount(acountNumber,acountHolderName,rateOfInterest,currentBalance)
                     elif(accountType.lower() =="checking"):
@@ -50,28 +45,24 @@ def showMainMenu():
                     updateDatabase(acountHolderName)
                 except Exception as e: print(e)
 
-        #DONE select account
+        #DONE select account 
             elif userinp == 2:
                 allAcNum = [i['acountNumber'] for i in Gdata]
-                print("  All Acounts")
-
-                pprint(Gdata)
-                # pprint(localBankDB)
-
+                print("  All Acounts\n ")
                 while True:
-                    inpnum = str(input("Enter Account Number "))
+                    inpnum = str(input("Enter Account Number to access  \n  >"))
                     if inpnum in allAcNum:
                         showAccountMenu(allAcNum.index(inpnum))
                     else:
-                        print("account doesnt exsist")
-        #DONE Application  
+                        print("Account Doesnt Exsist")
+        #DONE EXIT THE PROGRAM
             elif userinp == 3:
                 print("EXITING Banking System")
-                exit
-        except: print("invalid input") 
-        time.sleep(2)
-        
-def showAccountMenu(inputAcc):
+                sys.exit(1)
+        except Exception: print("invalid input") 
+        time.sleep(2.5)
+
+def showAccountMenu(inputAcc): 
     global wallet
     selectedAcc = localBankDB[inputAcc]
     while True:
@@ -109,13 +100,10 @@ def showAccountMenu(inputAcc):
             print("invalid input")
             time.sleep(2)
     showMainMenu()
-
-
 #database functions VVV
 with open ('accountDataBase.json', 'w') as A:
     json.dump([],A)
-#resets database ^^^
-
+#resets database ^^^ comment out to not reset after each call
 def updateLocalData():
     with open ('accountDataBase.json', 'r') as A:
         global Gdata
@@ -136,7 +124,6 @@ def updateDatabase(*args:list):
         # updateLocalData()
     except Exception as e: print(e) ; time.sleep(2)
 updateDatabase(defaultAc,checkingAc,savingAc)
-
 
 #init call    
 showMainMenu()

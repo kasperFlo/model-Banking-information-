@@ -42,7 +42,7 @@ class regularAcount:
     @_currentBalance.setter
     def _currentBalance(self,accBal):
         try:
-            if isinstance(accBal,(int,float)) and accBal > 0:
+            if isinstance(accBal,(int,float)) and accBal >= 0:
                 self.__currentBalance = accBal
             else: raise
         except:raise TypeError ("Error : Invaild Balance Ammount / Number")
@@ -53,12 +53,11 @@ class regularAcount:
             else: raise
         except:raise TypeError("Transaction Declined : Invalid Amount")
         
-    def withdraw(self,withdrawAmount):
-        if (withdrawAmount <= self._currentBalance): #check if there is enough money
+    def withdraw(self,withdrawAmount:int):
+        if (withdrawAmount <= self._currentBalance) and (withdrawAmount > 0): #check if there is enough money
             self._currentBalance -= withdrawAmount
             return withdrawAmount
-        else:   raise TypeError("Transaction Declined : Insufficient Funds")
-
+        else:raise TypeError("Transaction Declined : Insufficient Funds")
     def getInfo(self):
         output ={
         "acountNumber" : self._acountNumber,
@@ -74,11 +73,11 @@ class savingAccount(regularAcount):
         self._minimumBalance = minBal
     def withdraw(self,withdrawAmount):
         #can only withdraw if left with more then minimumBalance amount
-        if (self._currentBalance - withdrawAmount) >= self._minimumBalance: 
+        if (self._currentBalance - withdrawAmount) >= self._minimumBalance and withdrawAmount > 0: 
             self._currentBalance -= withdrawAmount
             return withdrawAmount
-        else:  
-            raise TypeError("Transaction Declined : Over Limit / Min Value")
+
+        else:raise TypeError("Transaction Declined : Over Limit / Min Value")
     def getInfo(self):
         output ={
         "acountNumber" : self._acountNumber,
@@ -94,11 +93,10 @@ class checkingAcount(regularAcount):
         self._overdraftAllowed = ovrDraftLim
     def withdraw(self,withdrawAmount):
         #can only withdraw if left with more then overdraft amount
-        if (self._currentBalance - withdrawAmount) >= (0 - self._overdraftAllowed): 
+        if (self._currentBalance - withdrawAmount) >= (0 - self._overdraftAllowed) and withdrawAmount > 0: 
             self._currentBalance -= withdrawAmount
             return withdrawAmount
-        else:  
-            raise TypeError("Transaction Declined : Insufficient Overdraft / Funds")
+        else:raise TypeError("Transaction Declined : Insufficient Funds / Overdraft Limit Reached ")
     def getInfo(self):
         output ={
         "acountNumber" : self._acountNumber,
